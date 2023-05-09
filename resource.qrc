@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>记号笔.png</file>
+        <file>美工刀.png</file>
+        <file>墨水.png</file>
+        <file>橡皮.png</file>
+    </qresource>
+</RCC>
