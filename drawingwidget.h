@@ -11,6 +11,9 @@ class DrawingWidget : public QWidget
 public:
     explicit DrawingWidget(QWidget* parent = nullptr);
 
+    QList<QColor> print();
+    QList<QColor> import();
+
     QPixmap getPixmap() const;
 
 protected:
@@ -34,11 +37,18 @@ private:
 
     void drawPixel(const QPoint& pos);
 
+    void drawPixel(int row, int col, QColor color);
+
     void drawLine(const QPoint& from, const QPoint& to);
+
+private slots:
+    void color_changed(QColor newColor);
 
 private:
     QImage image_{513, 513, QImage::Format_RGB32};
     QPoint lastPos_;
+    QList<QColor> colorMap_;
+    QColor currentColor_;
 
 };
 

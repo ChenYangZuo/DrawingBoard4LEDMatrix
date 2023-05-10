@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>657</width>
-    <height>609</height>
+    <width>691</width>
+    <height>631</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -56,7 +56,7 @@
                </property>
                <property name="icon">
                 <iconset resource="resource.qrc">
-                 <normaloff>:/橡皮.png</normaloff>:/橡皮.png</iconset>
+                 <normaloff>:/rubber.png</normaloff>:/rubber.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -76,7 +76,7 @@
                </property>
                <property name="icon">
                 <iconset resource="resource.qrc">
-                 <normaloff>:/墨水.png</normaloff>:/墨水.png</iconset>
+                 <normaloff>:/ink.png</normaloff>:/ink.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -96,7 +96,7 @@
                </property>
                <property name="icon">
                 <iconset resource="resource.qrc">
-                 <normaloff>:/记号笔.png</normaloff>:/记号笔.png</iconset>
+                 <normaloff>:/pen.png</normaloff>:/pen.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -116,7 +116,7 @@
                </property>
                <property name="icon">
                 <iconset resource="resource.qrc">
-                 <normaloff>:/美工刀.png</normaloff>:/美工刀.png</iconset>
+                 <normaloff>:/knife.png</normaloff>:/knife.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -137,6 +137,7 @@
             <property name="title">
              <string>颜色</string>
             </property>
+            <layout class="QGridLayout" name="gridLayout_2"/>
            </widget>
           </item>
           <item>
@@ -161,9 +162,9 @@
         <string>音频</string>
        </attribute>
       </widget>
-      <widget class="QWidget" name="tab_clk">
+      <widget class="QWidget" name="tab_other">
        <attribute name="title">
-        <string>时钟</string>
+        <string>其他</string>
        </attribute>
       </widget>
      </widget>
@@ -175,8 +176,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>657</width>
-     <height>27</height>
+     <width>691</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

@@ -17,8 +17,9 @@ set(PROJECT_SOURCES
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
-    titlebar.h titlebar.cpp
+#    titlebar.h titlebar.cpp
     drawingwidget.h drawingwidget.cpp
+    colorwidget.h colorwidget.cpp
     resource.qrc
 )
 
