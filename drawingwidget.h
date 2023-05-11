@@ -11,8 +11,9 @@ class DrawingWidget : public QWidget
 public:
     explicit DrawingWidget(QWidget* parent = nullptr);
 
-    QList<QColor> print();
-    QList<QColor> import();
+    void exportDrawingBoard();
+    QList<QColor> importDrawingBoard();
+    void resetDrawingBoard();
 
     QPixmap getPixmap() const;
 
@@ -47,7 +48,7 @@ private slots:
 private:
     QImage image_{513, 513, QImage::Format_RGB32};
     QPoint lastPos_;
-    QList<QColor> colorMap_;
+    QList<QColor> colorMap_ = QList<QColor>();
     QColor currentColor_;
 
 };

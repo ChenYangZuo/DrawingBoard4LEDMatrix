@@ -3,20 +3,20 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QFileDialog>
+#include <QCoreApplication>
+#include <QMessageBox>
 
 DrawingWidget::DrawingWidget(QWidget *parent) : QWidget(parent) {
     setFixedSize(513, 513);
-    fillGrid();
-    for(int i=0; i<256; i++){
-        colorMap_.append(QColor(255,255,255));
-    }
+    resetDrawingBoard();
     currentColor_ = QColor(0,0,0);
 }
 
-QList<QColor> DrawingWidget::print() {
-    qDebug() << colorMap_;
+void DrawingWidget::exportDrawingBoard() {
+//    qDebug() << colorMap_;
     QJsonArray colorArray;
-    for (const QColor& color : colorMap_) {
+    for (const QColor& color : qAsConst(colorMap_)) {
         QJsonObject colorObject;
         colorObject.insert("red", color.red());
         colorObject.insert("green", color.green());
@@ -25,32 +25,41 @@ QList<QColor> DrawingWidget::print() {
     }
     QJsonDocument doc(colorArray);
     QString json = doc.toJson(QJsonDocument::Compact);
-    // 创建一个QFile对象并打开它以写入模式
-    QFile file("colors.json");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "Failed";
+
+    QString url = QFileDialog::getSaveFileName(nullptr, "保存画板", "./", "Json文件(*.json)");
+    if(url.isNull()){
+        return;
     }
 
-    // 创建一个QTextStream对象并将其与文件相关联
+    QFile file(url);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(this,"错误","文件保存出错");
+        return;
+    }
+
     QTextStream out(&file);
 
-    // 将JSON字符串写入文件并关闭文件
     out << json;
     file.close();
-
-    return colorMap_;
 }
 
-QList<QColor> DrawingWidget::import() {
-    QFile file("colors.json");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Failed";
+QList<QColor> DrawingWidget::importDrawingBoard() {
+    QString url = QFileDialog::getOpenFileName(nullptr, "打开画板", "./", "Json文件(*.json)");
+    if(url.isNull()){
+        return QList<QColor>();
     }
+
+    QFile file(url);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::critical(this,"错误","文件保存出错");
+        return QList<QColor>();
+    }
+
     QTextStream in(&file);
     QString json;
-    // 将JSON字符串写入文件并关闭文件
     in >> json;
     file.close();
+
     QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
     QJsonArray colorArray = doc.array();
     QList<QColor> colorList;
@@ -61,8 +70,9 @@ QList<QColor> DrawingWidget::import() {
         int blue = colorObject.value("blue").toInt();
         colorList.append(QColor(red, green, blue));
     }
+
     colorMap_ = colorList;
-    fillGrid();
+
     for(int i=0; i<16; i++){
         for(int j=0; j<16; j++){
             drawPixel(i,j,colorMap_[i*16+j]);
@@ -70,6 +80,15 @@ QList<QColor> DrawingWidget::import() {
     }
 
     return colorMap_;
+}
+
+void DrawingWidget::resetDrawingBoard() {
+    fillGrid();
+    colorMap_.clear();
+    for(int i=0; i<256; i++){
+        colorMap_.append(QColor(255,255,255));
+    }
+    currentColor_ = QColor(0,0,0);
 }
 
 QPixmap DrawingWidget::getPixmap() const {
@@ -201,5 +220,5 @@ void DrawingWidget::drawLine(const QPoint &from, const QPoint &to) {
 
 void DrawingWidget::color_changed(QColor newColor) {
     qDebug() << newColor;
-    currentColor_ = newColor;
+    this->currentColor_ = newColor;
 }

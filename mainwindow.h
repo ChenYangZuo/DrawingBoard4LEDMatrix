@@ -22,6 +22,10 @@ private slots:
 
     void on_action_import_triggered();
 
+    void on_action_clc_triggered();
+
+    void on_action_open_triggered();
+
 private:
     Ui::MainWindow *ui;
     QList<colorWidget*> colorWidgetList_;
