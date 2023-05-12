@@ -8,7 +8,7 @@
 #include <QMessageBox>
 
 DrawingWidget::DrawingWidget(QWidget *parent) : QWidget(parent) {
-    setFixedSize(513, 513);
+//    setFixedSize(529, 529);
     resetDrawingBoard();
     currentColor_ = QColor(0,0,0);
 }
@@ -98,8 +98,13 @@ QPixmap DrawingWidget::getPixmap() const {
 }
 
 void DrawingWidget::mousePressEvent(QMouseEvent *event) {
+    QRect rect_ = rect();
+    rect_.adjust(0,0,-1,-1);
+
     if (event->button() == Qt::LeftButton) {
-        drawPixel(event->pos());
+        if(rect_.contains(event->pos())) {
+            drawPixel(event->pos());
+        }
     }
 }
 
@@ -110,12 +115,14 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void DrawingWidget::mouseMoveEvent(QMouseEvent *event) {
+    QRect rect_ = rect();
+    rect_.adjust(0,0,-1,-1);
+
     if (event->buttons() & Qt::LeftButton) {
-        drawLine(lastPos_, event->pos());
-    }
-    else {
-//        fillGrid();
-//        highlightCell(event->pos());
+        if(rect_.contains(event->pos())){
+            qDebug() << event->pos();
+            drawPixel(event->pos());
+        }
     }
 }
 
@@ -134,16 +141,17 @@ void DrawingWidget::leaveEvent(QEvent *) {
 }
 
 void DrawingWidget::fillGrid() {
+    int cellSize = 32;
+
     image_.fill(Qt::white);
     QPainter painter(&image_);
     QPen pen(Qt::DashLine);
     pen.setWidth(1);
     pen.setColor(Qt::gray);
     painter.setPen(pen);
-    for (int i = 0; i < 16; ++i) {
-        for (int j = 0; j < 16; ++j) {
-            painter.drawRect(i * 32, j * 32, 32, 32);
-        }
+    for(int i=0; i<17; i++){
+        painter.drawLine(0, i*(cellSize+1), 528, i*(cellSize+1)); //横向
+        painter.drawLine(i*(cellSize+1), 0, i*(cellSize+1), 528); //纵向
     }
 }
 
@@ -159,24 +167,25 @@ void DrawingWidget::highlightCell(const QPoint &pos) {
 }
 
 void DrawingWidget::drawPixel(const QPoint &pos) {
+    int cellSize = 32;
+    int row = pos.y() / 33;
+    int col = pos.x() / 33;
+
     QPainter painter(&image_);
     painter.setPen(Qt::black);
-    int cellSize = width() / 16;
-    int row = pos.y() / cellSize;
-    int col = pos.x() / cellSize;
-    painter.fillRect(col * cellSize, row * cellSize, cellSize, cellSize, currentColor_);
+    painter.fillRect(col * (cellSize+1)+1, row * (cellSize+1)+1, cellSize, cellSize, currentColor_);
 
     colorMap_.replace(row * 16 + col, currentColor_);
 
-    lastPos_ = pos;
     update();
 }
 
 void DrawingWidget::drawPixel(int row, int col, QColor color) {
+    int cellSize = 32;
+
     QPainter painter(&image_);
     painter.setPen(Qt::black);
-    int cellSize = width() / 16;
-    painter.fillRect(col * cellSize, row * cellSize, cellSize, cellSize, color);
+    painter.fillRect(col * cellSize+1, row * cellSize+1, cellSize-1, cellSize-1, color);
 
     update();
 }

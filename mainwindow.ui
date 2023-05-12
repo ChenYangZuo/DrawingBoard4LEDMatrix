@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>691</width>
-    <height>631</height>
+    <width>707</width>
+    <height>647</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,14 +29,14 @@
          <widget class="DrawingWidget" name="drawingwidget" native="true">
           <property name="minimumSize">
            <size>
-            <width>513</width>
-            <height>513</height>
+            <width>529</width>
+            <height>529</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>513</width>
-            <height>513</height>
+            <width>529</width>
+            <height>529</height>
            </size>
           </property>
          </widget>
@@ -176,7 +176,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>691</width>
+     <width>707</width>
      <height>29</height>
     </rect>
    </property>

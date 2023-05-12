@@ -46,7 +46,7 @@ private slots:
     void color_changed(QColor newColor);
 
 private:
-    QImage image_{513, 513, QImage::Format_RGB32};
+    QImage image_{529, 529, QImage::Format_RGB32};
     QPoint lastPos_;
     QList<QColor> colorMap_ = QList<QColor>();
     QColor currentColor_;
