@@ -3,7 +3,8 @@
 #include <QColorDialog>
 #include <QPainter>
 
-colorWidget::colorWidget(QWidget *parent) : QWidget{parent} {
+colorWidget::colorWidget(QWidget *parent, QColor color) : QWidget{parent} {
+    this->color_ = color;
     setFixedSize(24, 24);
 }
 

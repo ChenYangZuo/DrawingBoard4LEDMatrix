@@ -28,8 +28,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QList<colorWidget*> colorWidgetList_;
-
 
 };
 #endif // MAINWINDOW_H

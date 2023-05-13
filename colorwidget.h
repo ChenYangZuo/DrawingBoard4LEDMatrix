@@ -12,7 +12,7 @@ class colorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit colorWidget(QWidget *parent = nullptr);
+    explicit colorWidget(QWidget *parent = nullptr, QColor color = QColor(0,0,0));
 
 private:
     void mouseReleaseEvent(QMouseEvent *event);

@@ -12,35 +12,24 @@ public:
     explicit DrawingWidget(QWidget* parent = nullptr);
 
     void exportDrawingBoard();
-    QList<QColor> importDrawingBoard();
-    void resetDrawingBoard();
 
-    QPixmap getPixmap() const;
+    QList<QColor> importDrawingBoard();
+
+    void resetDrawingBoard();
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;
-
-    void mouseReleaseEvent(QMouseEvent* event) override;
 
     void mouseMoveEvent(QMouseEvent* event) override;
 
     void paintEvent(QPaintEvent*) override;
 
-    void enterEvent(QEvent*) override;
-
-    void leaveEvent(QEvent*) override;
-
-
 private:
     void fillGrid();
-
-    void highlightCell(const QPoint& pos);
 
     void drawPixel(const QPoint& pos);
 
     void drawPixel(int row, int col, QColor color);
-
-    void drawLine(const QPoint& from, const QPoint& to);
 
 private slots:
     void color_changed(QColor newColor);

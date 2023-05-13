@@ -14,63 +14,39 @@ DrawingWidget::DrawingWidget(QWidget *parent) : QWidget(parent) {
 }
 
 void DrawingWidget::exportDrawingBoard() {
-//    qDebug() << colorMap_;
-    QJsonArray colorArray;
-    for (const QColor& color : qAsConst(colorMap_)) {
-        QJsonObject colorObject;
-        colorObject.insert("red", color.red());
-        colorObject.insert("green", color.green());
-        colorObject.insert("blue", color.blue());
-        colorArray.append(colorObject);
-    }
-    QJsonDocument doc(colorArray);
-    QString json = doc.toJson(QJsonDocument::Compact);
-
-    QString url = QFileDialog::getSaveFileName(nullptr, "保存画板", "./", "Json文件(*.json)");
+    QString url = QFileDialog::getSaveFileName(nullptr, "保存画板", "./", "Data文件(*.dat)");
     if(url.isNull()){
         return;
     }
-
     QFile file(url);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::WriteOnly)){
         QMessageBox::critical(this,"错误","文件保存出错");
         return;
     }
 
-    QTextStream out(&file);
+    QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_5_0);
 
-    out << json;
+    out << colorMap_;
     file.close();
 }
 
 QList<QColor> DrawingWidget::importDrawingBoard() {
-    QString url = QFileDialog::getOpenFileName(nullptr, "打开画板", "./", "Json文件(*.json)");
+    QString url = QFileDialog::getOpenFileName(nullptr, "打开画板", "./", "Data文件(*.dat)");
     if(url.isNull()){
         return QList<QColor>();
     }
-
     QFile file(url);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly)){
         QMessageBox::critical(this,"错误","文件保存出错");
         return QList<QColor>();
     }
 
-    QTextStream in(&file);
-    QString json;
-    in >> json;
-    file.close();
+    QDataStream in(&file);
+    in.setVersion(QDataStream::Qt_5_0);
 
-    QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
-    QJsonArray colorArray = doc.array();
     QList<QColor> colorList;
-    for (const QJsonValue& value : colorArray) {
-        QJsonObject colorObject = value.toObject();
-        int red = colorObject.value("red").toInt();
-        int green = colorObject.value("green").toInt();
-        int blue = colorObject.value("blue").toInt();
-        colorList.append(QColor(red, green, blue));
-    }
-
+    in >> colorList;
     colorMap_ = colorList;
 
     for(int i=0; i<16; i++){
@@ -91,12 +67,6 @@ void DrawingWidget::resetDrawingBoard() {
     currentColor_ = QColor(0,0,0);
 }
 
-QPixmap DrawingWidget::getPixmap() const {
-    QPixmap pixmap = QPixmap::fromImage(image_.scaled(16, 16));
-    pixmap.setDevicePixelRatio(devicePixelRatioF());
-    return pixmap;
-}
-
 void DrawingWidget::mousePressEvent(QMouseEvent *event) {
     QRect rect_ = rect();
     rect_.adjust(0,0,-1,-1);
@@ -105,12 +75,6 @@ void DrawingWidget::mousePressEvent(QMouseEvent *event) {
         if(rect_.contains(event->pos())) {
             drawPixel(event->pos());
         }
-    }
-}
-
-void DrawingWidget::mouseReleaseEvent(QMouseEvent *event) {
-    if (event->button() == Qt::LeftButton) {
-        lastPos_ = QPoint();
     }
 }
 
@@ -131,15 +95,6 @@ void DrawingWidget::paintEvent(QPaintEvent *) {
     painter.drawImage(rect(), image_);
 }
 
-void DrawingWidget::enterEvent(QEvent *) {
-    setMouseTracking(true);
-}
-
-void DrawingWidget::leaveEvent(QEvent *) {
-    setMouseTracking(false);
-//    fillGrid();
-}
-
 void DrawingWidget::fillGrid() {
     int cellSize = 32;
 
@@ -153,17 +108,6 @@ void DrawingWidget::fillGrid() {
         painter.drawLine(0, i*(cellSize+1), 528, i*(cellSize+1)); //横向
         painter.drawLine(i*(cellSize+1), 0, i*(cellSize+1), 528); //纵向
     }
-}
-
-void DrawingWidget::highlightCell(const QPoint &pos) {
-    QPainter painter(&image_);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(Qt::lightGray));
-    int cellSize = width() / 16;
-    int row = pos.y() / cellSize;
-    int col = pos.x() / cellSize;
-    painter.drawRect(col * cellSize, row * cellSize, cellSize, cellSize);
-    update();
 }
 
 void DrawingWidget::drawPixel(const QPoint &pos) {
@@ -185,45 +129,8 @@ void DrawingWidget::drawPixel(int row, int col, QColor color) {
 
     QPainter painter(&image_);
     painter.setPen(Qt::black);
-    painter.fillRect(col * cellSize+1, row * cellSize+1, cellSize-1, cellSize-1, color);
+    painter.fillRect(col * (cellSize+1)+1, row * (cellSize+1)+1, cellSize, cellSize, color);
 
-    update();
-}
-
-void DrawingWidget::drawLine(const QPoint &from, const QPoint &to) {
-    QPainter painter(&image_);
-    painter.setPen(Qt::black);
-    int cellSize = width() / 16;
-    int row1 = from.y() / cellSize;
-    int col1 = from.x() / cellSize;
-    int row2 = to.y() / cellSize;
-    int col2 = to.x() / cellSize;
-    int dx = abs(col2 - col1);
-    int dy = abs(row2 - row1);
-    int sx = col1 < col2 ? 1 : -1;
-    int sy = row1 < row2 ? 1 : -1;
-    int err = dx - dy;
-
-    while (true) {
-        painter.fillRect(col1 * cellSize, row1 * cellSize, cellSize, cellSize, currentColor_);
-        colorMap_.replace(row1 * 16 + col1, currentColor_);
-
-        if (col1 == col2 && row1 == row2) {
-            break;
-        }
-
-        int e2 = 2 * err;
-        if (e2 > -dy) {
-            err -= dy;
-            col1 += sx;
-        }
-        if (e2 < dx) {
-            err += dx;
-            row1 += sy;
-        }
-    }
-
-    lastPos_ = to;
     update();
 }
 
