@@ -1,16 +1,14 @@
 #include "drawingwidget.h"
 #include <QDebug>
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QJsonDocument>
 #include <QFileDialog>
 #include <QCoreApplication>
 #include <QMessageBox>
+#include <QToolButton>
 
-DrawingWidget::DrawingWidget(QWidget *parent) : QWidget(parent) {
+DrawingWidget::DrawingWidget(QWidget *parent, QColor color) : QWidget(parent) {
 //    setFixedSize(529, 529);
     resetDrawingBoard();
-    currentColor_ = QColor(0,0,0);
+    currentColor_ = color;
 }
 
 void DrawingWidget::exportDrawingBoard() {
@@ -72,7 +70,22 @@ void DrawingWidget::mousePressEvent(QMouseEvent *event) {
 
     if (event->button() == Qt::LeftButton) {
         if(rect_.contains(event->pos())) {
-            drawPixel(event->pos());
+            switch (currentTool_) {
+            case PEN:
+                drawPixel(event->pos());
+                break;
+            case RUBBER:
+                erasePixel(event->pos());
+                break;
+            case KNIFE:
+                slakePixel(event->pos());
+                break;
+            case INK:
+                dyePixel(event->pos());
+                break;
+            default:
+                break;
+            }
         }
     }
 }
@@ -83,8 +96,19 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent *event) {
 
     if (event->buttons() & Qt::LeftButton) {
         if(rect_.contains(event->pos())){
-//            qDebug() << event->pos();
-            drawPixel(event->pos());
+            switch (currentTool_) {
+            case PEN:
+                drawPixel(event->pos());
+                break;
+            case RUBBER:
+                erasePixel(event->pos());
+                break;
+            case KNIFE:
+                slakePixel(event->pos());
+                break;
+            default:
+                break;
+            }
         }
     }
 }
@@ -135,7 +159,98 @@ void DrawingWidget::drawPixel(int row, int col, QColor color) {
     update();
 }
 
+void DrawingWidget::erasePixel(const QPoint &pos) {
+    int cellSize = 32;
+    int row = pos.y() / 33;
+    int col = pos.x() / 33;
+
+    QPainter painter(&image_);
+    painter.setPen(Qt::black);
+    painter.fillRect(col * (cellSize+1)+1, row * (cellSize+1)+1, cellSize, cellSize, QColor(255, 255, 255));
+
+    colorMap_.replace(row * 16 + col, QColor(255, 255, 255));
+
+    update();
+}
+
+void DrawingWidget::slakePixel(const QPoint &pos) {
+    int cellSize = 32;
+    int row = pos.y() / 33;
+    int col = pos.x() / 33;
+
+    QPainter painter(&image_);
+    painter.setPen(Qt::black);
+    painter.fillRect(col * (cellSize+1)+1, row * (cellSize+1)+1, cellSize, cellSize, QColor(0, 0, 0));
+
+    colorMap_.replace(row * 16 + col, QColor(0, 0, 0));
+
+    update();
+}
+
+void DrawingWidget::dyePixel(const QPoint &pos) {
+    int cellSize = 32;
+    int row = pos.y() / 33;
+    int col = pos.x() / 33;
+
+    QList<int> mask;
+    for(int i=0; i<256; i++){
+        mask.append(0);
+    }
+
+    algorithm_dfs(row, col, colorMap_, mask, colorMap_[row * 16 + col]);
+
+    for(int i=0; i<16; i++) {
+        for(int j=0; j<16; j++) {
+            if(mask[i*16+j]) {
+                drawPixel(i,j,currentColor_);
+                colorMap_[i*16+j] = currentColor_;
+            }
+        }
+    }
+
+}
+
+void DrawingWidget::algorithm_dfs(int row, int col, QList<QColor> &map, QList<int> &mask, QColor color) {
+    if (row < 0 || row > 15 || col < 0 || col > 15) {
+        return;
+    }
+    if (mask[row * 16 + col] != 0) {
+        return;
+    }
+    if(map[row * 16 + col] != color) {
+//        qDebug() << map[row * 16 + col] << currentColor_;
+        return;
+    }
+
+    mask[row * 16 + col] = 1;
+
+    algorithm_dfs(row+1, col, colorMap_, mask, color);
+    algorithm_dfs(row-1, col, colorMap_, mask, color);
+    algorithm_dfs(row, col+1, colorMap_, mask, color);
+    algorithm_dfs(row, col-1, colorMap_, mask, color);
+}
+
+void DrawingWidget::changeColor(QColor color) {
+    this->currentColor_ = color;
+}
+
 void DrawingWidget::color_changed(QColor newColor) {
-    qDebug() << newColor;
     this->currentColor_ = newColor;
+}
+
+void DrawingWidget::tool_changed() {
+    QToolButton *clickedBtn = qobject_cast<QToolButton *>(sender());
+    QString obj = clickedBtn->objectName();
+    if(obj.compare("toolButton_pen") == 0){
+        currentTool_ = PEN;
+    }
+    else if(obj.compare("toolButton_rubber") == 0){
+        currentTool_ = RUBBER;
+    }
+    else if(obj.compare("toolButton_ink") == 0){
+        currentTool_ = INK;
+    }
+    else if(obj.compare("toolButton_knife") == 0){
+        currentTool_ = KNIFE;
+    }
 }

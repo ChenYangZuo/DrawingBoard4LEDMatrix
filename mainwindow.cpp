@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 
 #include <QDebug>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -12,6 +13,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
         ui->gridLayout_2->addWidget(mcolorWidget, i/2, i%2, 1, 1);
         connect(mcolorWidget, SIGNAL(colorSignal(QColor)), this->ui->drawingwidget, SLOT(color_changed(QColor)));
     }
+    this->ui->drawingwidget->changeColor(colorList[0]);
+
+
+    connect(this->ui->toolButton_pen, SIGNAL(clicked()), this->ui->drawingwidget, SLOT(tool_changed()));
+    connect(this->ui->toolButton_rubber, SIGNAL(clicked()), this->ui->drawingwidget, SLOT(tool_changed()));
+    connect(this->ui->toolButton_ink, SIGNAL(clicked()), this->ui->drawingwidget, SLOT(tool_changed()));
+    connect(this->ui->toolButton_knife, SIGNAL(clicked()), this->ui->drawingwidget, SLOT(tool_changed()));
 }
 
 MainWindow::~MainWindow() {
@@ -35,3 +43,8 @@ void MainWindow::on_action_open_triggered() {
 void MainWindow::on_action_import_triggered() {
 
 }
+
+void MainWindow::on_action_about_triggered() {
+    QMessageBox::information(this, "About", "杭州电子科技大学 左晨洋");
+}
+

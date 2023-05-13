@@ -17,6 +17,7 @@ void colorWidget::mouseReleaseEvent(QMouseEvent *event) {
         const QColor color = QColorDialog::getColor(Qt::white, this, "Select Color");
         if (color.isValid()) {
             this->color_ = color;
+            update();
             emit colorSignal(this->color_);
         }
     }
