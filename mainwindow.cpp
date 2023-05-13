@@ -22,12 +22,8 @@ void MainWindow::on_action_save_triggered() {
     ui->drawingwidget->exportDrawingBoard();
 }
 
-void MainWindow::on_action_import_triggered() {
-
-}
-
-
 void MainWindow::on_action_clc_triggered() {
+//    qDebug() << "MainWindow::on_action_clc_triggered";
     ui->drawingwidget->resetDrawingBoard();
 }
 
@@ -36,3 +32,6 @@ void MainWindow::on_action_open_triggered() {
     ui->drawingwidget->importDrawingBoard();
 }
 
+void MainWindow::on_action_import_triggered() {
+
+}

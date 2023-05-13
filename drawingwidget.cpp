@@ -64,7 +64,6 @@ void DrawingWidget::resetDrawingBoard() {
     for(int i=0; i<256; i++){
         colorMap_.append(QColor(255,255,255));
     }
-    currentColor_ = QColor(0,0,0);
 }
 
 void DrawingWidget::mousePressEvent(QMouseEvent *event) {
@@ -84,7 +83,7 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent *event) {
 
     if (event->buttons() & Qt::LeftButton) {
         if(rect_.contains(event->pos())){
-            qDebug() << event->pos();
+//            qDebug() << event->pos();
             drawPixel(event->pos());
         }
     }
@@ -108,6 +107,8 @@ void DrawingWidget::fillGrid() {
         painter.drawLine(0, i*(cellSize+1), 528, i*(cellSize+1)); //横向
         painter.drawLine(i*(cellSize+1), 0, i*(cellSize+1), 528); //纵向
     }
+
+    update();
 }
 
 void DrawingWidget::drawPixel(const QPoint &pos) {

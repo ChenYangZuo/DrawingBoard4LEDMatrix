@@ -38,7 +38,7 @@ private:
     QImage image_{529, 529, QImage::Format_RGB32};
     QPoint lastPos_;
     QList<QColor> colorMap_ = QList<QColor>();
-    QColor currentColor_;
+    QColor currentColor_ = QColor(0, 0, 0);
 
 };
 
