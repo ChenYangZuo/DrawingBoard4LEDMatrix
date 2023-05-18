@@ -53,6 +53,8 @@ QList<QColor> DrawingWidget::importDrawingBoard() {
         }
     }
 
+    file.close();
+
     return colorMap_;
 }
 
@@ -62,6 +64,31 @@ void DrawingWidget::resetDrawingBoard() {
     for(int i=0; i<256; i++){
         colorMap_.append(QColor(255,255,255));
     }
+}
+
+void DrawingWidget::generateCode() {
+    QFile file("./generate.h");
+    if (!file.open(QIODevice::WriteOnly|QIODevice::Text)){
+        return;
+    }
+    QTextStream out(&file);
+
+    // 灯板的第0个LED在右上方，向左按蛇字形排序
+    int index = 0;
+    for(int i=0; i<16; i++){
+        if(i%2 == 1){
+            for(int j=0; j<16; j++){
+                out << QString("pixels.setPixelColor(%1, pixels.Color(%2, %3, %4));").arg(index++).arg(colorMap_[i*16+j].red()).arg(colorMap_[i*16+j].green()).arg(colorMap_[i*16+j].blue()) << "\n";
+            }
+        }
+        else{
+            for(int j=0; j<16; j++){
+                out << QString("pixels.setPixelColor(%1, pixels.Color(%2, %3, %4));").arg(index++).arg(colorMap_[(i+1)*16-(j+1)].red()).arg(colorMap_[(i+1)*16-(j+1)].green()).arg(colorMap_[(i+1)*16-(j+1)].blue()) << "\n";
+            }
+        }
+    }
+
+    file.close();
 }
 
 void DrawingWidget::mousePressEvent(QMouseEvent *event) {

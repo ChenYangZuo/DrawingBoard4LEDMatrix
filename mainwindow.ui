@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>707</width>
+    <width>679</width>
     <height>647</height>
    </rect>
   </property>
@@ -51,12 +51,30 @@
             <layout class="QGridLayout" name="gridLayout">
              <item row="1" column="0">
               <widget class="QToolButton" name="toolButton_rubber">
-               <property name="text">
-                <string>橡皮</string>
+               <property name="minimumSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
                </property>
-               <property name="icon">
-                <iconset resource="resource.qrc">
-                 <normaloff>:/rubber.png</normaloff>:/rubber.png</iconset>
+               <property name="maximumSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QToolButton {
+	border-image: url(:/rubber.png);
+}
+
+QToolButton:checked {
+	border-image: url(:/rubber.png);
+	background-color: rgb(236, 236, 236);
+}</string>
+               </property>
+               <property name="text">
+                <string/>
                </property>
                <property name="iconSize">
                 <size>
@@ -64,19 +82,37 @@
                  <height>24</height>
                 </size>
                </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
                </property>
               </widget>
              </item>
              <item row="2" column="0">
               <widget class="QToolButton" name="toolButton_ink">
-               <property name="text">
-                <string>油漆</string>
+               <property name="minimumSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
                </property>
-               <property name="icon">
-                <iconset resource="resource.qrc">
-                 <normaloff>:/ink.png</normaloff>:/ink.png</iconset>
+               <property name="maximumSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QToolButton {
+	border-image: url(:/ink.png);
+}
+
+QToolButton:checked {
+	border-image: url(:/ink.png);
+	background-color: rgb(236, 236, 236);
+}</string>
                </property>
                <property name="iconSize">
                 <size>
@@ -84,19 +120,40 @@
                  <height>24</height>
                 </size>
                </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
                </property>
               </widget>
              </item>
              <item row="0" column="0">
               <widget class="QToolButton" name="toolButton_pen">
-               <property name="text">
-                <string>画笔</string>
+               <property name="minimumSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
                </property>
-               <property name="icon">
-                <iconset resource="resource.qrc">
-                 <normaloff>:/pen.png</normaloff>:/pen.png</iconset>
+               <property name="maximumSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QToolButton {
+	border-image: url(:/pen.png);
+}
+
+QToolButton:checked {
+	border-image: url(:/pen.png);
+	background-color: rgb(236, 236, 236);
+}</string>
+               </property>
+               <property name="text">
+                <string/>
                </property>
                <property name="iconSize">
                 <size>
@@ -104,19 +161,40 @@
                  <height>24</height>
                 </size>
                </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
                </property>
               </widget>
              </item>
              <item row="3" column="0">
               <widget class="QToolButton" name="toolButton_knife">
-               <property name="text">
-                <string>小刀</string>
+               <property name="minimumSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
                </property>
-               <property name="icon">
-                <iconset resource="resource.qrc">
-                 <normaloff>:/knife.png</normaloff>:/knife.png</iconset>
+               <property name="maximumSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QToolButton {
+	border-image: url(:/knife.png);
+}
+
+QToolButton:checked {
+	border-image: url(:/knife.png);
+	background-color: rgb(236, 236, 236);
+}</string>
                </property>
                <property name="iconSize">
                 <size>
@@ -124,8 +202,11 @@
                  <height>24</height>
                 </size>
                </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
                </property>
               </widget>
              </item>
@@ -176,8 +257,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>707</width>
-     <height>27</height>
+     <width>679</width>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -195,6 +276,7 @@
     <addaction name="action_clc"/>
     <addaction name="separator"/>
     <addaction name="action_settings"/>
+    <addaction name="action_generate"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -236,6 +318,11 @@
     <string>关于</string>
    </property>
   </action>
+  <action name="action_generate">
+   <property name="text">
+    <string>生成</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -245,8 +332,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="resource.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

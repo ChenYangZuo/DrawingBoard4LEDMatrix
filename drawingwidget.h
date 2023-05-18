@@ -24,6 +24,8 @@ public:
 
     void resetDrawingBoard();
 
+    void generateCode();
+
     void changeColor(QColor color);
 
 protected:

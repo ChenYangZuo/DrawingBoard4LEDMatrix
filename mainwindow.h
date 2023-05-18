@@ -2,9 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QButtonGroup>
 
 #include "drawingwidget.h"
 #include "colorwidget.h"
+#include "colorgroup.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,8 +30,13 @@ private slots:
 
     void on_action_about_triggered();
 
+    void on_action_generate_triggered();
+
 private:
     Ui::MainWindow *ui;
+
+    QButtonGroup *pButtonGroup = nullptr;
+    ColorGroup *pColorGroup = nullptr;
 
 };
 #endif // MAINWINDOW_H

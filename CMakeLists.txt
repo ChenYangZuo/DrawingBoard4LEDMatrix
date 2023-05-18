@@ -22,6 +22,7 @@ set(PROJECT_SOURCES
 #    titlebar.h titlebar.cpp
     drawingwidget.h drawingwidget.cpp
     colorwidget.h colorwidget.cpp
+    colorgroup.h colorgroup.cpp
     resource.qrc
 )
 
