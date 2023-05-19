@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "settings.h"
+#include "socketmanager.h"
 
 #include <QDebug>
 #include <QMessageBox>
@@ -29,6 +31,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
     connect(this->ui->toolButton_rubber, SIGNAL(clicked()), this->ui->drawingwidget, SLOT(tool_changed()));
     connect(this->ui->toolButton_ink, SIGNAL(clicked()), this->ui->drawingwidget, SLOT(tool_changed()));
     connect(this->ui->toolButton_knife, SIGNAL(clicked()), this->ui->drawingwidget, SLOT(tool_changed()));
+
+    SocketManager *socketmanager = new SocketManager(this);
+    socketmanager->setAddress("192.168.31.202");
+    socketmanager->setPort(5555);
+    socketmanager->createListener();
+
+    connect(this->ui->drawingwidget, &DrawingWidget::dataReady, socketmanager, &SocketManager::sendMessage);
 }
 
 MainWindow::~MainWindow() {
@@ -40,7 +49,6 @@ void MainWindow::on_action_save_triggered() {
 }
 
 void MainWindow::on_action_clc_triggered() {
-//    qDebug() << "MainWindow::on_action_clc_triggered";
     ui->drawingwidget->resetDrawingBoard();
 }
 
@@ -56,8 +64,19 @@ void MainWindow::on_action_about_triggered() {
     QMessageBox::information(this, "About", "杭州电子科技大学 左晨洋");
 }
 
-void MainWindow::on_action_generate_triggered()
-{
+void MainWindow::on_action_generate_triggered() {
     ui->drawingwidget->generateCode();
+    ui->drawingwidget->sendDrawingBoard();
+}
+
+void MainWindow::on_action_settings_triggered() {
+    Settings *dialog = new Settings();
+    int rtn = dialog->exec();
+    if(rtn == QDialog::Accepted){
+        QString ip = dialog->getIP();
+        int port = dialog->getPORT();
+        qDebug() << ip << port;
+    }
+    delete dialog;
 }
 

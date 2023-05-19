@@ -32,6 +32,8 @@ private slots:
 
     void on_action_generate_triggered();
 
+    void on_action_settings_triggered();
+
 private:
     Ui::MainWindow *ui;
 

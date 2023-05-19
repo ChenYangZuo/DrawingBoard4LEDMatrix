@@ -91,6 +91,33 @@ void DrawingWidget::generateCode() {
     file.close();
 }
 
+void DrawingWidget::sendDrawingBoard() {
+    QByteArray drawingboardData;
+
+    drawingboardData.append(0xa5);
+    drawingboardData.append(0x5a);
+
+    // 灯板的第0个LED在右上方，向左按蛇字形排序
+    for(int i=0; i<16; i++){
+        if(i%2 == 1){
+            for(int j=0; j<16; j++){
+                drawingboardData.append(colorMap_[i*16+j].red());
+                drawingboardData.append(colorMap_[i*16+j].green());
+                drawingboardData.append(colorMap_[i*16+j].blue());
+            }
+        }
+        else{
+            for(int j=0; j<16; j++){
+                drawingboardData.append(colorMap_[(i+1)*16-(j+1)].red());
+                drawingboardData.append(colorMap_[(i+1)*16-(j+1)].green());
+                drawingboardData.append(colorMap_[(i+1)*16-(j+1)].blue());
+            }
+        }
+    }
+
+    emit dataReady(&drawingboardData);
+}
+
 void DrawingWidget::mousePressEvent(QMouseEvent *event) {
     QRect rect_ = rect();
     rect_.adjust(0,0,-1,-1);

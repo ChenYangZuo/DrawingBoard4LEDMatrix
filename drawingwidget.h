@@ -26,6 +26,8 @@ public:
 
     void generateCode();
 
+    void sendDrawingBoard();
+
     void changeColor(QColor color);
 
 protected:
@@ -60,6 +62,9 @@ private:
     QList<QColor> colorMap_ = QList<QColor>();
     QColor currentColor_ = QColor(0, 0, 0);
     int currentTool_ = PEN;
+
+signals:
+    void dataReady(const QByteArray* data);
 
 };
 
